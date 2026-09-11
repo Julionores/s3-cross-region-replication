@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Bucket de destination pour la réplication S3 inter-région. À déployer dans la région
+  de destination (par exemple us-east-1) AVANT le template source.
+
+Parameters:
+  DestinationBucketName:
+    Type: String
+    Description: Nom unique du bucket destination (doit être globalement unique sur AWS)
+
+Resources:
+  DestinationBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DestinationBucketName
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+Outputs:
+  DestinationBucketName:
+    Description: Nom du bucket destination
+    Value: !Ref DestinationBucket
+
+  DestinationBucketArn:
+    Description: ARN du bucket destination
+    Value: !GetAtt DestinationBucket.Arn

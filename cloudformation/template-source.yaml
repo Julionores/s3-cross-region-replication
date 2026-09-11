@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Bucket source et configuration de réplication inter-région (CRR). À déployer dans la
+  région source (par exemple eu-west-1), APRÈS que le bucket de destination existe déjà
+  (voir template-destination.yaml, à déployer dans la région de destination).
+
+Parameters:
+  SourceBucketName:
+    Type: String
+    Description: Nom unique du bucket source (doit être globalement unique sur AWS)
+
+  DestinationBucketName:
+    Type: String
+    Description: Nom du bucket destination déjà créé dans l'autre région
+
+Resources:
+  ReplicationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: s3-crr-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetReplicationConfiguration
+                  - s3:ListBucket
+                Resource: !Sub arn:aws:s3:::${SourceBucketName}
+              - Effect: Allow
+                Action:
+                  - s3:GetObjectVersionForReplication
+                  - s3:GetObjectVersionAcl
+                  - s3:GetObjectVersionTagging
+                Resource: !Sub arn:aws:s3:::${SourceBucketName}/*
+              - Effect: Allow
+                Action:
+                  - s3:ReplicateObject
+                  - s3:ReplicateDelete
+                  - s3:ReplicateTags
+                Resource: !Sub arn:aws:s3:::${DestinationBucketName}/*
+
+  # Ressource absente du template de cours d'origine : sans elle, le bucket source
+  # et le rôle IAM existent, mais AUCUNE réplication ne se produit réellement.
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SourceBucketName
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      ReplicationConfiguration:
+        Role: !GetAtt ReplicationRole.Arn
+        Rules:
+          - Id: ReplicateAllObjects
+            Status: Enabled
+            Priority: 1
+            Filter:
+              Prefix: ''
+            DeleteMarkerReplication:
+              Status: Disabled
+            Destination:
+              Bucket: !Sub arn:aws:s3:::${DestinationBucketName}
+
+Outputs:
+  SourceBucketName:
+    Description: Nom du bucket source
+    Value: !Ref SourceBucket
+
+  ReplicationRoleArn:
+    Description: ARN du rôle IAM pour la réplication
+    Value: !GetAtt ReplicationRole.Arn

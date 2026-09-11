@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installe cfn-lint
+        run: pip install cfn-lint
+      - name: Valide le template destination
+        run: cfn-lint cloudformation/template-destination.yaml
+      - name: Valide le template source
+        run: cfn-lint cloudformation/template-source.yaml
