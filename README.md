@@ -23,9 +23,10 @@ se produisait en pratique).
 > [`postgresql-ha-repmgr`](https://github.com/Julionores/postgresql-ha-repmgr) et
 > [`iso27001-isms-toolkit`](https://github.com/Julionores/iso27001-isms-toolkit).
 > Côté Machine Learning, voir aussi [`gradientforge`](https://github.com/Julionores/gradientforge),
-> [`radar-risque-impaye`](https://github.com/Julionores/radar-risque-impaye) et
-> [`collecte-agricole-planner`](https://github.com/Julionores/collecte-agricole-planner), un
-> planificateur de tournées combinant clustering géographique et optimisation combinatoire.
+> [`radar-risque-impaye`](https://github.com/Julionores/radar-risque-impaye),
+> [`collecte-agricole-planner`](https://github.com/Julionores/collecte-agricole-planner) et
+> [`ticket-tide`](https://github.com/Julionores/ticket-tide), une prévision de série
+> temporelle (famille ARMA).
 
 ## Architecture
 
