@@ -17,6 +17,11 @@ se produisait en pratique).
 > [`aws-troubleshooting-challenge`](https://github.com/Julionores/aws-troubleshooting-challenge),
 > [`aws-alb-deployment-patterns`](https://github.com/Julionores/aws-alb-deployment-patterns) et
 > [`aws-vpc-connectivity-patterns`](https://github.com/Julionores/aws-vpc-connectivity-patterns).
+> Côté DevSecOps/Full Stack, voir aussi
+> [`devsecops-pipeline-reference`](https://github.com/Julionores/devsecops-pipeline-reference),
+> [`securebank-api`](https://github.com/Julionores/securebank-api),
+> [`postgresql-ha-repmgr`](https://github.com/Julionores/postgresql-ha-repmgr) et
+> [`iso27001-isms-toolkit`](https://github.com/Julionores/iso27001-isms-toolkit).
 
 ## Architecture
 
